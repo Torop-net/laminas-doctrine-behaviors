@@ -1,0 +1,12 @@
+{
+  "name": "mez/zf-doctrine-behaviors",
+  "description": "Doctrine Behaviors ported to Zend Framework",
+  "minimum-stability": "dev",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Martin Meredith",
+      "email": "martin@sourceguru.net"
+    }
+  ]
+}
