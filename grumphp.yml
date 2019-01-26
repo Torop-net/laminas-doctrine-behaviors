@@ -1,0 +1,35 @@
+parameters:
+  git_dir: .
+  bin_dir: vendor/bin
+  tasks:
+    composer: ~
+    phpcpd:
+      exclude:
+      - vendor
+      - config
+      - test
+      - data
+    phpcsfixer2:
+      config: .php_cs
+      allow_risky: true
+    phplint: ~
+    phpmd:
+      exclude:
+      - vendor
+      - config
+      - test
+      ruleset:
+      - cleancode
+      - codesize
+    phpmnd: ~
+    phpparser:
+      visitors:
+        forbidden_function_calls:
+          blacklist:
+            - 'var_dump'
+        no_exit_statements: ~
+    phpstan:
+      level: 7
+    phpversion:
+      project: '7.1'
+    securitychecker: ~

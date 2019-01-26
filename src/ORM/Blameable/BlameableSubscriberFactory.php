@@ -67,7 +67,7 @@ final class BlameableSubscriberFactory
         $userClass = null;
 
         if (!empty($config['blameable_subscriber']['user_class']) &&
-            class_exists($config['blameable_subscriber']['user_class'])) {
+            \class_exists($config['blameable_subscriber']['user_class'])) {
             $userClass = $config['blameable_subscriber']['user_class'];
         }
 

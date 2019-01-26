@@ -42,10 +42,8 @@ final class TranslatableSubscriberFactory
      * __invoke
      *
      * @param \Interop\Container\ContainerInterface $container
-     * @param string $requestedName
-     * @param array|null $options
      *
-     * @return \Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber|object
+     * @return \Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber
      */
     public function __invoke(ContainerInterface $container)
     {

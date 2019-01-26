@@ -9,13 +9,39 @@
       "email": "martin@sourceguru.net"
     }
   ],
+  "autoload": {
+    "psr-4": {
+      "Mez\\DoctrineBehaviors\\": [
+        "src"
+      ]
+    }
+  },
+  "config": {
+    "preferred-install": {
+      "*": "dist"
+    },
+    "sort-packages": true
+  },
   "require": {
     "php": "^7.3",
+    "doctrine/dbal": "^2.9@dev",
     "knplabs/doctrine-behaviors": "^1.5@dev",
-    "psr/container": "^1.0@dev",
-    "doctrine/dbal": "^2.9@dev"
+    "psr/container": "^1.0@dev"
   },
   "require-dev": {
+    "friendsofphp/php-cs-fixer": "^2.15@dev",
+    "jakub-onderka/php-parallel-lint": "dev-master",
+    "nikic/php-parser": "^4.2@dev",
+    "phpmd/phpmd": "dev-master",
+    "phpro/grumphp": "dev-master",
+    "phpstan/phpstan": "^0.11.0@dev",
+    "povils/phpmnd": "^2.0@dev",
+    "sebastian/phpcpd": "^4.0@dev",
+    "sensiolabs/security-checker": "^5.0@dev",
     "zendframework/zend-servicemanager": "^3.3@dev"
+  },
+  "scripts": {
+    "cs-fix": "php-cs-fixer --allow-risky=yes --config=.php_cs --verbose fix",
+    "cs-check": "php-cs-fixer --allow-risky=yes --config=.php_cs --verbose --dry-run fix"
   }
 }

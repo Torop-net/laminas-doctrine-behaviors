@@ -35,16 +35,17 @@ final class DefaultLocaleCallable
     /**
      * __invoke
      *
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     *
      * @return string|null
      */
     public function __invoke(): ?string
     {
-        if (!extension_loaded('intl')) {
+        if (!\extension_loaded('intl')) {
             return null;
         }
 
         /** @noinspection PhpComposerExtensionStubsInspection */
         return \Locale::getDefault();
     }
-
 }
