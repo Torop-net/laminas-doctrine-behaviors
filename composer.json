@@ -8,5 +8,14 @@
       "name": "Martin Meredith",
       "email": "martin@sourceguru.net"
     }
-  ]
+  ],
+  "require": {
+    "php": "^7.3",
+    "knplabs/doctrine-behaviors": "^1.5@dev",
+    "psr/container": "^1.0@dev",
+    "doctrine/dbal": "^2.9@dev"
+  },
+  "require-dev": {
+    "zendframework/zend-servicemanager": "^3.3@dev"
+  }
 }
