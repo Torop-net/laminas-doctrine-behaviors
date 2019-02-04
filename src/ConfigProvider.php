@@ -36,6 +36,7 @@ use Knp\DoctrineBehaviors\ORM\Timestampable\TimestampableSubscriber;
 use Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber;
 use Knp\DoctrineBehaviors\ORM\Tree\TreeSubscriber;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Mez\DoctrineBehaviors\DBAL\Types\PointType;
 use Mez\DoctrineBehaviors\ORM\Blameable\BlameableSubscriberFactory;
 use Mez\DoctrineBehaviors\ORM\Geocodable\GeocodableSubscriberFactory;
 use Mez\DoctrineBehaviors\ORM\Loggable\LoggableSubscriberFactory;
@@ -62,6 +63,11 @@ final class ConfigProvider
     public function __invoke(): array
     {
         return [
+            'doctrine' => [
+                'types' => [
+                    PointType::NAME => PointType::class,
+                ],
+            ],
             'dependencies' => $this->getDependencies(),
             'doctrine-behaviors' => [
                 'blameable_subscriber' => [],
