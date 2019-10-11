@@ -25,10 +25,10 @@ declare(strict_types=1);
 
 namespace Mez\DoctrineBehaviors\ORM\SoftDeletable;
 
-use Interop\Container\ContainerInterface;
 use Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable;
 use Knp\DoctrineBehaviors\ORM\SoftDeletable\SoftDeletableSubscriber;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class SoftDeletableSubscriberFactory
@@ -40,7 +40,7 @@ final class SoftDeletableSubscriberFactory
     /**
      * __invoke
      *
-     * @param \Interop\Container\ContainerInterface $container
+     * @param \Psr\Container\ContainerInterface $container
      *
      * @return \Knp\DoctrineBehaviors\ORM\SoftDeletable\SoftDeletableSubscriber
      */

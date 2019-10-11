@@ -25,10 +25,10 @@ declare(strict_types=1);
 
 namespace Mez\DoctrineBehaviors\ORM\Timestampable;
 
-use Interop\Container\ContainerInterface;
 use Knp\DoctrineBehaviors\Model\Timestampable\Timestampable;
 use Knp\DoctrineBehaviors\ORM\Timestampable\TimestampableSubscriber;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class TimestampableSubscriberFactory
@@ -40,7 +40,7 @@ final class TimestampableSubscriberFactory
     /**
      * __invoke
      *
-     * @param \Interop\Container\ContainerInterface $container
+     * @param \Psr\Container\ContainerInterface $container
      *
      * @return \Knp\DoctrineBehaviors\ORM\Timestampable\TimestampableSubscriber
      */

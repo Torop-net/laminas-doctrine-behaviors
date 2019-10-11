@@ -25,10 +25,10 @@ declare(strict_types=1);
 
 namespace Mez\DoctrineBehaviors\ORM\Geocodable;
 
-use Interop\Container\ContainerInterface;
 use Knp\DoctrineBehaviors\Model\Geocodable\Geocodable;
 use Knp\DoctrineBehaviors\ORM\Geocodable\GeocodableSubscriber;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class GeocodableSubscriberFactory
@@ -40,7 +40,7 @@ final class GeocodableSubscriberFactory
     /**
      * __invoke
      *
-     * @param \Interop\Container\ContainerInterface $container
+     * @param \Psr\Container\ContainerInterface $container
      *
      * @return \Knp\DoctrineBehaviors\ORM\Geocodable\GeocodableSubscriber
      */

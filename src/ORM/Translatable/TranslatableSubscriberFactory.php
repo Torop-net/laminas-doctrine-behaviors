@@ -25,11 +25,11 @@ declare(strict_types=1);
 
 namespace Mez\DoctrineBehaviors\ORM\Translatable;
 
-use Interop\Container\ContainerInterface;
 use Knp\DoctrineBehaviors\Model\Translatable\Translatable;
 use Knp\DoctrineBehaviors\Model\Translatable\Translation;
 use Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class TranslatableSubscriberFactory
@@ -41,7 +41,7 @@ final class TranslatableSubscriberFactory
     /**
      * __invoke
      *
-     * @param \Interop\Container\ContainerInterface $container
+     * @param \Psr\Container\ContainerInterface $container
      *
      * @return \Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber
      */

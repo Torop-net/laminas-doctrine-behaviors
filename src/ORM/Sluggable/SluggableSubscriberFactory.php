@@ -25,10 +25,10 @@ declare(strict_types=1);
 
 namespace Mez\DoctrineBehaviors\ORM\Sluggable;
 
-use Interop\Container\ContainerInterface;
 use Knp\DoctrineBehaviors\Model\Sluggable\Sluggable;
 use Knp\DoctrineBehaviors\ORM\Sluggable\SluggableSubscriber;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class SluggableSubscriberFactory
@@ -40,7 +40,7 @@ final class SluggableSubscriberFactory
     /**
      * __invoke
      *
-     * @param \Interop\Container\ContainerInterface $container
+     * @param \Psr\Container\ContainerInterface $container
      *
      * @return \Knp\DoctrineBehaviors\ORM\Sluggable\SluggableSubscriber
      */

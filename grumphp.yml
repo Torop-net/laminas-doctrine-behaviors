@@ -3,6 +3,8 @@ parameters:
   bin_dir: vendor/bin
   tasks:
     composer: ~
+    composer_normalize: ~
+    composer_require_checker: ~
     phpcpd:
       exclude:
       - vendor
@@ -30,6 +32,9 @@ parameters:
         no_exit_statements: ~
     phpstan:
       level: 7
+      ignore_patterns:
+        - .phpstorm.meta.php
+        - test
     phpversion:
-      project: '7.1'
+      project: '7.3'
     securitychecker: ~

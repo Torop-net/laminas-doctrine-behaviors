@@ -25,9 +25,9 @@ declare(strict_types=1);
 
 namespace Mez\DoctrineBehaviors\ORM\Loggable;
 
-use Interop\Container\ContainerInterface;
 use Knp\DoctrineBehaviors\ORM\Loggable\LoggableSubscriber;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class LoggableSubscriberFactory
@@ -39,7 +39,7 @@ final class LoggableSubscriberFactory
     /**
      * __invoke
      *
-     * @param \Interop\Container\ContainerInterface $container
+     * @param \Psr\Container\ContainerInterface $container
      *
      * @return \Knp\DoctrineBehaviors\ORM\Loggable\LoggableSubscriber
      */

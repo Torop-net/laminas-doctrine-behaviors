@@ -25,10 +25,10 @@ declare(strict_types=1);
 
 namespace Mez\DoctrineBehaviors\ORM\Blameable;
 
-use Interop\Container\ContainerInterface;
 use Knp\DoctrineBehaviors\Model\Blameable\Blameable;
 use Knp\DoctrineBehaviors\ORM\Blameable\BlameableSubscriber;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class BlameableSubscriberFactory
@@ -40,7 +40,7 @@ final class BlameableSubscriberFactory
     /**
      * __invoke
      *
-     * @param \Interop\Container\ContainerInterface $container
+     * @param \Psr\Container\ContainerInterface $container
      *
      * @return \Knp\DoctrineBehaviors\ORM\Blameable\BlameableSubscriber|object
      */

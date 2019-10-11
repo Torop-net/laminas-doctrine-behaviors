@@ -25,10 +25,10 @@ declare(strict_types=1);
 
 namespace Mez\DoctrineBehaviors\ORM\Sortable;
 
-use Interop\Container\ContainerInterface;
 use Knp\DoctrineBehaviors\Model\Sortable\Sortable;
 use Knp\DoctrineBehaviors\ORM\Sortable\SortableSubscriber;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class SortableSubscriberFactory
@@ -40,7 +40,7 @@ final class SortableSubscriberFactory
     /**
      * __invoke
      *
-     * @param \Interop\Container\ContainerInterface $container
+     * @param \Psr\Container\ContainerInterface $container
      *
      * @return \Knp\DoctrineBehaviors\ORM\Sortable\SortableSubscriber
      */
