@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright 2019 Martin Meredith <martin@sourceguru.net>
+ * Copyright (c) 2019 Martin Meredith <martin@sourceguru.net>
+ * Coypright (c) 2020 Majimez Limited <contact@majimez.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,30 +24,25 @@
 
 declare(strict_types=1);
 
-namespace Mez\DoctrineBehaviors;
+namespace Majimez\DoctrineBehaviors;
 
-use Doctrine\DBAL\Types\Type;
-use Knp\DoctrineBehaviors\ORM\Blameable\BlameableSubscriber;
-use Knp\DoctrineBehaviors\ORM\Geocodable\GeocodableSubscriber;
-use Knp\DoctrineBehaviors\ORM\Loggable\LoggableSubscriber;
-use Knp\DoctrineBehaviors\ORM\Sluggable\SluggableSubscriber;
-use Knp\DoctrineBehaviors\ORM\SoftDeletable\SoftDeletableSubscriber;
-use Knp\DoctrineBehaviors\ORM\Sortable\SortableSubscriber;
-use Knp\DoctrineBehaviors\ORM\Timestampable\TimestampableSubscriber;
-use Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber;
-use Knp\DoctrineBehaviors\ORM\Tree\TreeSubscriber;
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-use Mez\DoctrineBehaviors\DBAL\Types\PointType;
-use Mez\DoctrineBehaviors\ORM\Blameable\BlameableSubscriberFactory;
-use Mez\DoctrineBehaviors\ORM\Geocodable\GeocodableSubscriberFactory;
-use Mez\DoctrineBehaviors\ORM\Loggable\LoggableSubscriberFactory;
-use Mez\DoctrineBehaviors\ORM\Sluggable\SluggableSubscriberFactory;
-use Mez\DoctrineBehaviors\ORM\SoftDeletable\SoftDeletableSubscriberFactory;
-use Mez\DoctrineBehaviors\ORM\Sortable\SortableSubscriberFactory;
-use Mez\DoctrineBehaviors\ORM\Timestampable\TimestampableSubscriberFactory;
-use Mez\DoctrineBehaviors\ORM\Translatable\DefaultLocaleCallable;
-use Mez\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriberFactory;
-use Mez\DoctrineBehaviors\ORM\Tree\TreeSubscriberFactory;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Knp\DoctrineBehaviors\EventSubscriber\BlameableSubscriber;
+use Knp\DoctrineBehaviors\EventSubscriber\LoggableSubscriber;
+use Knp\DoctrineBehaviors\EventSubscriber\SluggableSubscriber;
+use Knp\DoctrineBehaviors\EventSubscriber\SoftDeletableSubscriber;
+use Knp\DoctrineBehaviors\EventSubscriber\TimestampableSubscriber;
+use Knp\DoctrineBehaviors\EventSubscriber\TranslatableSubscriber;
+use Knp\DoctrineBehaviors\EventSubscriber\TreeSubscriber;
+use Knp\DoctrineBehaviors\EventSubscriber\UuidableSubscriber;
+use Knp\DoctrineBehaviors\Repository\DefaultSluggableRepository;
+use Majimez\DoctrineBehaviors\ORM\Blameable\BlameableSubscriberFactory;
+use Majimez\DoctrineBehaviors\ORM\Loggable\LoggableSubscriberFactory;
+use Majimez\DoctrineBehaviors\ORM\Sluggable\DefaultSluggableRepositoryFactory;
+use Majimez\DoctrineBehaviors\ORM\Sluggable\SluggableSubscriberFactory;
+use Majimez\DoctrineBehaviors\ORM\Timestampable\TimestampableSubscriberFactory;
+use Majimez\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriberFactory;
 
 /**
  * Class ConfigProvider
@@ -58,31 +54,24 @@ final class ConfigProvider
     /**
      * __invoke
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function __invoke(): array
     {
         return [
-            'doctrine' => [
-                'types' => [
-                    PointType::NAME => PointType::class,
-                ],
-            ],
             'dependencies' => $this->getDependencies(),
             'doctrine-behaviors' => [
-                'blameable_subscriber' => [],
-                'geocodable_callable' => null,
-                'loggable_subscriber' => [],
-                'reflection' => [
-                    'is_recursive' => true,
+                'blameable' => [
+                    'user_provider' => null,
+                    'user_entity' => null,
                 ],
-                'timestampable_subscriber' => [
-                    'db_field_type' => Type::DATETIME,
+                'timestampable' => [
+                    'date_field_type' => Types::DATE_IMMUTABLE,
                 ],
-                'translatable_subscriber' => [
-                    'default_locale_callable' => DefaultLocaleCallable::class,
-                    'translatable_fetch_method' => 'LAZY',
-                    'translation_fetch_method' => 'LAZY',
+                'translatable' => [
+                    'locale_provider' => null,
+                    'translatable_fetch_method' => ClassMetadataInfo::FETCH_LAZY,
+                    'translation_fetch_method' => ClassMetadataInfo::FETCH_LAZY,
                 ],
             ],
         ];
@@ -91,38 +80,33 @@ final class ConfigProvider
     /**
      * getDependencies
      *
-     * @return array
+     * @return array<string, array<class-string|int, class-string|false>>
      */
     private function getDependencies(): array
     {
         return [
             'invokables' => [
-                ClassAnalyzer::class => ClassAnalyzer::class,
-                DefaultLocaleCallable::class => DefaultLocaleCallable::class,
+                SoftDeletableSubscriber::class => SoftDeletableSubscriber::class,
+                TreeSubscriber::class => TreeSubscriber::class,
+                UuidableSubscriber::class => UuidableSubscriber::class,
             ],
             'factories' => [
                 BlameableSubscriber::class => BlameableSubscriberFactory::class,
-                GeocodableSubscriber::class => GeocodableSubscriberFactory::class,
+                DefaultSluggableRepository::class => DefaultSluggableRepositoryFactory::class,
                 LoggableSubscriber::class => LoggableSubscriberFactory::class,
                 SluggableSubscriber::class => SluggableSubscriberFactory::class,
-                SoftDeletableSubscriber::class => SoftDeletableSubscriberFactory::class,
-                SortableSubscriber::class => SortableSubscriberFactory::class,
                 TimestampableSubscriber::class => TimestampableSubscriberFactory::class,
                 TranslatableSubscriber::class => TranslatableSubscriberFactory::class,
-                TreeSubscriber::class => TreeSubscriberFactory::class,
             ],
             'shared' => [
                 BlameableSubscriber::class => false,
-                ClassAnalyzer::class => false,
-                DefaultLocaleCallable::class => false,
-                GeocodableSubscriber::class => false,
                 LoggableSubscriber::class => false,
                 SluggableSubscriber::class => false,
                 SoftDeletableSubscriber::class => false,
-                SortableSubscriber::class => false,
                 TimestampableSubscriber::class => false,
                 TranslatableSubscriber::class => false,
                 TreeSubscriber::class => false,
+                UuidableSubscriber::class,
             ],
         ];
     }

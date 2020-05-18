@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright 2019 Martin Meredith <martin@sourceguru.net>
+ * Copyright (c) 2019 Martin Meredith <martin@sourceguru.net>
+ * Coypright (c) 2020 Majimez Limited <contact@majimez.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +24,11 @@
 
 declare(strict_types=1);
 
-namespace Mez\DoctrineBehaviors\ORM\Sluggable;
+namespace Majimez\DoctrineBehaviors\ORM\Sluggable;
 
-use Knp\DoctrineBehaviors\Model\Sluggable\Sluggable;
-use Knp\DoctrineBehaviors\ORM\Sluggable\SluggableSubscriber;
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Doctrine\ORM\EntityManager;
+use Knp\DoctrineBehaviors\EventSubscriber\SluggableSubscriber;
+use Knp\DoctrineBehaviors\Repository\DefaultSluggableRepository;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -42,16 +43,19 @@ final class SluggableSubscriberFactory
      *
      * @param \Psr\Container\ContainerInterface $container
      *
-     * @return \Knp\DoctrineBehaviors\ORM\Sluggable\SluggableSubscriber
+     * @return \Knp\DoctrineBehaviors\EventSubscriber\SluggableSubscriber
      */
     public function __invoke(ContainerInterface $container)
     {
-        /** @var ClassAnalyzer $classAnalyzer */
-        $classAnalyzer = $container->get(ClassAnalyzer::class);
+        $entity_manager = $container->get(EntityManager::class);
 
-        /** @var bool $isRecursive */
-        $isRecursive = $container->get('config')['doctrine-behaviors']['reflection']['is_recursive'];
+        $default_sluggable_repo = $container->get(
+            DefaultSluggableRepository::class
+        );
 
-        return new SluggableSubscriber($classAnalyzer, $isRecursive, Sluggable::class);
+        return new SluggableSubscriber(
+            $entity_manager,
+            $default_sluggable_repo
+        );
     }
 }

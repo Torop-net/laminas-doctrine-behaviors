@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright 2019 Martin Meredith <martin@sourceguru.net>
+ * Copyright (c) 2019 Martin Meredith <martin@sourceguru.net>
+ * Coypright (c) 2020 Majimez Limited <contact@majimez.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,29 +24,30 @@
 
 declare(strict_types=1);
 
-namespace Mez\DoctrineBehaviors\ORM\Translatable;
+namespace Majimez\DoctrineBehaviors\ORM\Sluggable;
+
+use Doctrine\ORM\EntityManager;
+use Knp\DoctrineBehaviors\Repository\DefaultSluggableRepository;
+use Psr\Container\ContainerInterface;
 
 /**
- * Class DefaultLocaleCallable
+ * Class DefaultSluggableRepositoryFactory
  *
- * @package Mez\DoctrineBehaviors\ORM\Translatable
+ * @package Majimez\DoctrineBehaviors\ORM\Sluggable
  */
-final class DefaultLocaleCallable
+final class DefaultSluggableRepositoryFactory
 {
     /**
      * __invoke
      *
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @param \Psr\Container\ContainerInterface $container
      *
-     * @return string|null
+     * @return \Knp\DoctrineBehaviors\Repository\DefaultSluggableRepository
      */
-    public function __invoke(): ?string
+    public function __invoke(ContainerInterface $container)
     {
-        if (!\extension_loaded('intl')) {
-            return null;
-        }
+        $entity_manager = $container->get(EntityManager::class);
 
-        /** @noinspection PhpComposerExtensionStubsInspection */
-        return \Locale::getDefault();
+        return new DefaultSluggableRepository($entity_manager);
     }
 }

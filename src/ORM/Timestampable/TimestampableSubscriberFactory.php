@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright 2019 Martin Meredith <martin@sourceguru.net>
+ * Copyright (c) 2019 Martin Meredith <martin@sourceguru.net>
+ * Coypright (c) 2020 Majimez Limited <contact@majimez.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +24,9 @@
 
 declare(strict_types=1);
 
-namespace Mez\DoctrineBehaviors\ORM\Timestampable;
+namespace Majimez\DoctrineBehaviors\ORM\Timestampable;
 
-use Knp\DoctrineBehaviors\Model\Timestampable\Timestampable;
-use Knp\DoctrineBehaviors\ORM\Timestampable\TimestampableSubscriber;
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Knp\DoctrineBehaviors\EventSubscriber\TimestampableSubscriber;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -42,21 +41,14 @@ final class TimestampableSubscriberFactory
      *
      * @param \Psr\Container\ContainerInterface $container
      *
-     * @return \Knp\DoctrineBehaviors\ORM\Timestampable\TimestampableSubscriber
+     * @return \Knp\DoctrineBehaviors\EventSubscriber\TimestampableSubscriber
      */
     public function __invoke(ContainerInterface $container)
     {
-        /** @var array $config */
-        $config = $container->get('config')['doctrine-behaviors'];
+        $module_config = $container->get('config')['doctrine-behaviors'];
 
-        /** @var ClassAnalyzer $classAnalyzer */
-        $classAnalyzer = $container->get(ClassAnalyzer::class);
+        $config = $module_config['timestampable'];
 
-        return new TimestampableSubscriber(
-            $classAnalyzer,
-            $config['reflection']['is_recursive'],
-            Timestampable::class,
-            $config['timestampable_subscriber']['db_field_type']
-        );
+        return new TimestampableSubscriber($config['date_field_type']);
     }
 }

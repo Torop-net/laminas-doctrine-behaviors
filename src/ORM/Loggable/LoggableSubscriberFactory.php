@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright 2019 Martin Meredith <martin@sourceguru.net>
+ * Copyright (c) 2019 Martin Meredith <martin@sourceguru.net>
+ * Coypright (c) 2020 Majimez Limited <contact@majimez.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +24,11 @@
 
 declare(strict_types=1);
 
-namespace Mez\DoctrineBehaviors\ORM\Loggable;
+namespace Majimez\DoctrineBehaviors\ORM\Loggable;
 
-use Knp\DoctrineBehaviors\ORM\Loggable\LoggableSubscriber;
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Knp\DoctrineBehaviors\EventSubscriber\LoggableSubscriber;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class LoggableSubscriberFactory
@@ -41,27 +42,12 @@ final class LoggableSubscriberFactory
      *
      * @param \Psr\Container\ContainerInterface $container
      *
-     * @return \Knp\DoctrineBehaviors\ORM\Loggable\LoggableSubscriber
+     * @return \Knp\DoctrineBehaviors\EventSubscriber\LoggableSubscriber
      */
     public function __invoke(ContainerInterface $container)
     {
-        /** @var array $config */
-        $config = $container->get('config')['doctrine-behaviors'];
+        $logger = $container->get(LoggerInterface::class);
 
-        /** @var ClassAnalyzer $classAnalyzer */
-        $classAnalyzer = $container->get(ClassAnalyzer::class);
-
-        /** @var bool $isRecursive */
-        $isRecursive = $config['reflection']['is_recursive'];
-
-        /** @var callable|null $loggerCallable */
-        $loggerCallable = null;
-
-        if (!empty($config['logger_subscriber']['logger_callable']) &&
-            $container->has($config['logger_subscriber']['logger_callable'])) {
-            $loggerCallable = $container->get($config['logger_subscriber']['logger_callable']);
-        }
-
-        return new LoggableSubscriber($classAnalyzer, $isRecursive, $loggerCallable);
+        return new LoggableSubscriber($logger);
     }
 }

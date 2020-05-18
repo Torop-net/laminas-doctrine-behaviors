@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright 2019 Martin Meredith <martin@sourceguru.net>
+ * Copyright (c) 2019 Martin Meredith <martin@sourceguru.net>
+ * Coypright (c) 2020 Majimez Limited <contact@majimez.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,12 +24,12 @@
 
 declare(strict_types=1);
 
-namespace Mez\DoctrineBehaviors\ORM\Blameable;
+namespace Majimez\DoctrineBehaviors\ORM\Blameable;
 
-use Knp\DoctrineBehaviors\Model\Blameable\Blameable;
-use Knp\DoctrineBehaviors\ORM\Blameable\BlameableSubscriber;
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Doctrine\ORM\EntityManager;
+use Knp\DoctrineBehaviors\EventSubscriber\BlameableSubscriber;
 use Psr\Container\ContainerInterface;
+use RuntimeException;
 
 /**
  * Class BlameableSubscriberFactory
@@ -42,35 +43,39 @@ final class BlameableSubscriberFactory
      *
      * @param \Psr\Container\ContainerInterface $container
      *
-     * @return \Knp\DoctrineBehaviors\ORM\Blameable\BlameableSubscriber|object
+     * @return \Knp\DoctrineBehaviors\EventSubscriber\BlameableSubscriber
      */
     public function __invoke(ContainerInterface $container)
     {
-        /** @var array $config */
-        $config = $container->get('config')['doctrine-behaviors'];
+        /** @var array<string, array<string, string>> $module_config */
+        $module_config = $container->get('config')['doctrine-behaviors'];
 
-        /** @var ClassAnalyzer $classAnalyzer */
-        $classAnalyzer = $container->get(ClassAnalyzer::class);
-
-        /** @var bool $isRecursive */
-        $isRecursive = $config['reflection']['is_recursive'];
-
-        /** @var callable|null $userCallable */
-        $userCallable = null;
-
-        if (!empty($config['blameable_subscriber']['user_callable']) &&
-            $container->has($config['blameable_subscriber']['user_callable'])) {
-            $userCallable = $container->get($config['blameable_subscriber']['user_callable']);
+        if (!isset($module_config['blameable'])) {
+            throw new RuntimeException('No configuration provided');
         }
 
-        /** @var string|null $userClass */
-        $userClass = null;
+        $config = $module_config['blameable'];
 
-        if (!empty($config['blameable_subscriber']['user_class']) &&
-            \class_exists($config['blameable_subscriber']['user_class'])) {
-            $userClass = $config['blameable_subscriber']['user_class'];
+        if (!isset($config['user_provider'])) {
+            throw new RuntimeException('You must provider a User Provider');
         }
 
-        return new BlameableSubscriber($classAnalyzer, $isRecursive, Blameable::class, $userCallable, $userClass);
+        /**
+         * @var \Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface $user_provider
+         */
+        $user_provider = $container->get($config['user_provider']);
+
+        $entity_manager = $container->get(EntityManager::class);
+
+        $user_class = null;
+
+        $user_entity =
+            $config['user_entity'] ?? $user_provider->provideUserEntity();
+
+        return new BlameableSubscriber(
+            $user_provider,
+            $entity_manager,
+            $user_entity
+        );
     }
 }

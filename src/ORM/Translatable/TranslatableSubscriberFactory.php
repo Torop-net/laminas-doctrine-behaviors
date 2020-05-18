@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright 2019 Martin Meredith <martin@sourceguru.net>
+ * Copyright (c) 2019 Martin Meredith <martin@sourceguru.net>
+ * Coypright (c) 2020 Majimez Limited <contact@majimez.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,13 +24,11 @@
 
 declare(strict_types=1);
 
-namespace Mez\DoctrineBehaviors\ORM\Translatable;
+namespace Majimez\DoctrineBehaviors\ORM\Translatable;
 
-use Knp\DoctrineBehaviors\Model\Translatable\Translatable;
-use Knp\DoctrineBehaviors\Model\Translatable\Translation;
-use Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber;
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Knp\DoctrineBehaviors\EventSubscriber\TranslatableSubscriber;
 use Psr\Container\ContainerInterface;
+use RuntimeException;
 
 /**
  * Class TranslatableSubscriberFactory
@@ -43,37 +42,23 @@ final class TranslatableSubscriberFactory
      *
      * @param \Psr\Container\ContainerInterface $container
      *
-     * @return \Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber
+     * @return \Knp\DoctrineBehaviors\EventSubscriber\TranslatableSubscriber
      */
     public function __invoke(ContainerInterface $container)
     {
-        $config = $container->get('config')['doctrine-behaviors']['translatable_subscriber'];
+        $module_config = $container->get('config')['doctrine-behaviors'];
+        $config = $module_config['translatable'];
 
-        /** @var ClassAnalyzer $classAnalyzer */
-        $classAnalyzer = $container->get(ClassAnalyzer::class);
-
-        /** @var callable|null $currentLocaleCallable */
-        $currentLocaleCallable = null;
-
-        if (!empty($config['current_locale_callable']) && $container->has($config['current_locale_callable'])) {
-            $currentLocaleCallable = $container->get($config['current_locale_callable']);
+        if (empty($config['locale_provider'])) {
+            throw new RuntimeException('You must provider a Locale Provider');
         }
 
-        /** @var callable|null $defaultLocaleCallable */
-        $defaultLocaleCallable = null;
-
-        if (!empty($config['default_locale_callable']) && $container->has($config['default_locale_callable'])) {
-            $defaultLocaleCallable = $container->get($config['default_locale_callable']);
-        }
+        $locale_provider = $container->get($config['locale_provider']);
 
         return new TranslatableSubscriber(
-            $classAnalyzer,
-            $currentLocaleCallable,
-            $defaultLocaleCallable,
-            Translatable::class,
-            Translation::class,
-            $config['translatable_fetch_method'],
-            $config['translation_fetch_method']
+            $locale_provider,
+            $config['translatable_fetch_mode'],
+            $config['translation_fetch_mode']
         );
     }
 }
