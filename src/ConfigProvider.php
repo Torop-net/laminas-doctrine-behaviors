@@ -27,22 +27,21 @@ declare(strict_types=1);
 namespace Majimez\DoctrineBehaviors;
 
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
-use Knp\DoctrineBehaviors\EventSubscriber\BlameableSubscriber;
-use Knp\DoctrineBehaviors\EventSubscriber\LoggableSubscriber;
-use Knp\DoctrineBehaviors\EventSubscriber\SluggableSubscriber;
-use Knp\DoctrineBehaviors\EventSubscriber\SoftDeletableSubscriber;
-use Knp\DoctrineBehaviors\EventSubscriber\TimestampableSubscriber;
-use Knp\DoctrineBehaviors\EventSubscriber\TranslatableSubscriber;
-use Knp\DoctrineBehaviors\EventSubscriber\TreeSubscriber;
+use Knp\DoctrineBehaviors\EventSubscriber\BlameableEventSubscriber;
+use Knp\DoctrineBehaviors\EventSubscriber\LoggableEventSubscriber;
+use Knp\DoctrineBehaviors\EventSubscriber\SluggableEventSubscriber;
+use Knp\DoctrineBehaviors\EventSubscriber\SoftDeletableEventSubscriber;
+use Knp\DoctrineBehaviors\EventSubscriber\TimestampableEventSubscriber;
+use Knp\DoctrineBehaviors\EventSubscriber\TranslatableEventSubscriber;
+use Knp\DoctrineBehaviors\EventSubscriber\TreeEventSubscriber;
 use Knp\DoctrineBehaviors\EventSubscriber\UuidableSubscriber;
 use Knp\DoctrineBehaviors\Repository\DefaultSluggableRepository;
-use Majimez\DoctrineBehaviors\ORM\Blameable\BlameableSubscriberFactory;
-use Majimez\DoctrineBehaviors\ORM\Loggable\LoggableSubscriberFactory;
+use Majimez\DoctrineBehaviors\ORM\Blameable\BlameableEventSubscriberFactory;
+use Majimez\DoctrineBehaviors\ORM\Loggable\LoggableEventSubscriberFactory;
 use Majimez\DoctrineBehaviors\ORM\Sluggable\DefaultSluggableRepositoryFactory;
-use Majimez\DoctrineBehaviors\ORM\Sluggable\SluggableSubscriberFactory;
-use Majimez\DoctrineBehaviors\ORM\Timestampable\TimestampableSubscriberFactory;
-use Majimez\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriberFactory;
+use Majimez\DoctrineBehaviors\ORM\Sluggable\SluggableEventSubscriberFactory;
+use Majimez\DoctrineBehaviors\ORM\Timestampable\TimestampableEventSubscriberFactory;
+use Majimez\DoctrineBehaviors\ORM\Translatable\TranslatableEventSubscriberFactory;
 
 /**
  * Class ConfigProvider
@@ -59,20 +58,25 @@ final class ConfigProvider
     public function __invoke(): array
     {
         return [
-            'dependencies' => $this->getDependencies(),
-            'doctrine-behaviors' => [
-                'blameable' => [
-                    'user_provider' => null,
-                    'user_entity' => null,
-                ],
-                'timestampable' => [
-                    'date_field_type' => Types::DATE_IMMUTABLE,
-                ],
-                'translatable' => [
-                    'locale_provider' => null,
-                    'translatable_fetch_method' => ClassMetadataInfo::FETCH_LAZY,
-                    'translation_fetch_method' => ClassMetadataInfo::FETCH_LAZY,
-                ],
+            'dependencies' => $this->getDependencyConfig(),
+            'doctrine-behaviors' => $this->getDoctrineBehaviorsConfig(),
+        ];
+    }
+
+    public function getDoctrineBehaviorsConfig(): array
+    {
+        return [
+            'blameable' => [
+                'user_provider' => null,
+                'user_entity' => null,
+            ],
+            'timestampable' => [
+                'date_field_type' => Types::DATE_IMMUTABLE,
+            ],
+            'translatable' => [
+                'locale_provider' => null,
+                'translatable_fetch_mode' => 'LAZY',
+                'translation_fetch_mode' => 'LAZY',
             ],
         ];
     }
@@ -80,33 +84,33 @@ final class ConfigProvider
     /**
      * getDependencies
      *
-     * @return array<string, array<class-string|int, class-string|false>>
+     * @return
      */
-    private function getDependencies(): array
+    public function getDependencyConfig(): array
     {
         return [
             'invokables' => [
-                SoftDeletableSubscriber::class => SoftDeletableSubscriber::class,
-                TreeSubscriber::class => TreeSubscriber::class,
+                SoftDeletableEventSubscriber::class => SoftDeletableEventSubscriber::class,
+                TreeEventSubscriber::class => TreeEventSubscriber::class,
                 UuidableSubscriber::class => UuidableSubscriber::class,
             ],
             'factories' => [
-                BlameableSubscriber::class => BlameableSubscriberFactory::class,
+                BlameableEventSubscriber::class => BlameableEventSubscriberFactory::class,
                 DefaultSluggableRepository::class => DefaultSluggableRepositoryFactory::class,
-                LoggableSubscriber::class => LoggableSubscriberFactory::class,
-                SluggableSubscriber::class => SluggableSubscriberFactory::class,
-                TimestampableSubscriber::class => TimestampableSubscriberFactory::class,
-                TranslatableSubscriber::class => TranslatableSubscriberFactory::class,
+                LoggableEventSubscriber::class => LoggableEventSubscriberFactory::class,
+                SluggableEventSubscriber::class => SluggableEventSubscriberFactory::class,
+                TimestampableEventSubscriber::class => TimestampableEventSubscriberFactory::class,
+                TranslatableEventSubscriber::class => TranslatableEventSubscriberFactory::class,
             ],
             'shared' => [
-                BlameableSubscriber::class => false,
-                LoggableSubscriber::class => false,
-                SluggableSubscriber::class => false,
-                SoftDeletableSubscriber::class => false,
-                TimestampableSubscriber::class => false,
-                TranslatableSubscriber::class => false,
-                TreeSubscriber::class => false,
-                UuidableSubscriber::class,
+                BlameableEventSubscriber::class => false,
+                LoggableEventSubscriber::class => false,
+                SluggableEventSubscriber::class => false,
+                SoftDeletableEventSubscriber::class => false,
+                TimestampableEventSubscriber::class => false,
+                TranslatableEventSubscriber::class => false,
+                TreeEventSubscriber::class => false,
+                UuidableSubscriber::class => false,
             ],
         ];
     }

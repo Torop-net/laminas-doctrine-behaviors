@@ -27,23 +27,23 @@ declare(strict_types=1);
 namespace Majimez\DoctrineBehaviors\ORM\Blameable;
 
 use Doctrine\ORM\EntityManager;
-use Knp\DoctrineBehaviors\EventSubscriber\BlameableSubscriber;
+use Knp\DoctrineBehaviors\EventSubscriber\BlameableEventSubscriber;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
 
 /**
- * Class BlameableSubscriberFactory
+ * Class BlameableEventSubscriberFactory
  *
  * @package Mez\DoctrineBehaviors\ORM\Blameable
  */
-final class BlameableSubscriberFactory
+final class BlameableEventSubscriberFactory
 {
     /**
      * __invoke
      *
      * @param \Psr\Container\ContainerInterface $container
      *
-     * @return \Knp\DoctrineBehaviors\EventSubscriber\BlameableSubscriber
+     * @return \Knp\DoctrineBehaviors\EventSubscriber\BlameableEventSubscriber
      */
     public function __invoke(ContainerInterface $container)
     {
@@ -72,7 +72,7 @@ final class BlameableSubscriberFactory
         $user_entity =
             $config['user_entity'] ?? $user_provider->provideUserEntity();
 
-        return new BlameableSubscriber(
+        return new BlameableEventSubscriber(
             $user_provider,
             $entity_manager,
             $user_entity

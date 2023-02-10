@@ -24,30 +24,31 @@
 
 declare(strict_types=1);
 
-namespace Majimez\DoctrineBehaviors\ORM\Loggable;
+namespace Majimez\DoctrineBehaviors\ORM\Timestampable;
 
-use Knp\DoctrineBehaviors\EventSubscriber\LoggableSubscriber;
+use Knp\DoctrineBehaviors\EventSubscriber\TimestampableEventSubscriber;
 use Psr\Container\ContainerInterface;
-use Psr\Log\LoggerInterface;
 
 /**
- * Class LoggableSubscriberFactory
+ * Class TimestampableEventSubscriberFactory
  *
- * @package Mez\DoctrineBehaviors\ORM\Loggable
+ * @package Mez\DoctrineBehaviors\ORM\Timestampable
  */
-final class LoggableSubscriberFactory
+final class TimestampableEventSubscriberFactory
 {
     /**
      * __invoke
      *
      * @param \Psr\Container\ContainerInterface $container
      *
-     * @return \Knp\DoctrineBehaviors\EventSubscriber\LoggableSubscriber
+     * @return \Knp\DoctrineBehaviors\EventSubscriber\TimestampableEventSubscriber
      */
     public function __invoke(ContainerInterface $container)
     {
-        $logger = $container->get(LoggerInterface::class);
+        $module_config = $container->get('config')['doctrine-behaviors'];
 
-        return new LoggableSubscriber($logger);
+        $config = $module_config['timestampable'];
+
+        return new TimestampableEventSubscriber($config['date_field_type']);
     }
 }

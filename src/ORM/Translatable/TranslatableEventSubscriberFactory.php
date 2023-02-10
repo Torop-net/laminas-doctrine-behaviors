@@ -24,38 +24,41 @@
 
 declare(strict_types=1);
 
-namespace Majimez\DoctrineBehaviors\ORM\Sluggable;
+namespace Majimez\DoctrineBehaviors\ORM\Translatable;
 
-use Doctrine\ORM\EntityManager;
-use Knp\DoctrineBehaviors\EventSubscriber\SluggableSubscriber;
-use Knp\DoctrineBehaviors\Repository\DefaultSluggableRepository;
+use Knp\DoctrineBehaviors\EventSubscriber\TranslatableEventSubscriber;
 use Psr\Container\ContainerInterface;
+use RuntimeException;
 
 /**
- * Class SluggableSubscriberFactory
+ * Class TranslatableEventSubscriberFactory
  *
- * @package Mez\DoctrineBehaviors\ORM\Sluggable
+ * @package Mez\DoctrineBehaviors\ORM\Translatable
  */
-final class SluggableSubscriberFactory
+final class TranslatableEventSubscriberFactory
 {
     /**
      * __invoke
      *
      * @param \Psr\Container\ContainerInterface $container
      *
-     * @return \Knp\DoctrineBehaviors\EventSubscriber\SluggableSubscriber
+     * @return \Knp\DoctrineBehaviors\EventSubscriber\TranslatableEventSubscriber
      */
     public function __invoke(ContainerInterface $container)
     {
-        $entity_manager = $container->get(EntityManager::class);
+        $module_config = $container->get('config')['doctrine-behaviors'];
+        $config = $module_config['translatable'];
 
-        $default_sluggable_repo = $container->get(
-            DefaultSluggableRepository::class
-        );
+        if (empty($config['locale_provider'])) {
+            throw new RuntimeException('You must provide a Locale Provider');
+        }
 
-        return new SluggableSubscriber(
-            $entity_manager,
-            $default_sluggable_repo
+        $locale_provider = $container->get($config['locale_provider']);
+
+        return new TranslatableEventSubscriber(
+            $locale_provider,
+            $config['translatable_fetch_mode'],
+            $config['translation_fetch_mode']
         );
     }
 }

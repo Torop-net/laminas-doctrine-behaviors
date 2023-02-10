@@ -12,7 +12,7 @@ parameters:
       - test
       - data
     phpcsfixer2:
-      config: .php_cs
+      config: .php-cs-fixer.php
       allow_risky: true
     phplint: ~
     phpmd:
@@ -36,5 +36,5 @@ parameters:
         - .phpstorm.meta.php
         - test
     phpversion:
-      project: '7.3'
+      project: '8.2'
     securitychecker: ~
